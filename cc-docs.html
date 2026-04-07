@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CC — Language Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Azeret+Mono:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --bg2: #ede8df;
+  --ink: #1a1410;
+  --ink2: #3d342a;
+  --ink3: #7a6e62;
+  --red: #c0392b;
+  --red2: #e74c3c;
+  --gold: #b8860b;
+  --border: #ccc4b4;
+  --code-bg: #1a1410;
+  --code-text: #f0ebe2;
+  --kw: #ff6b4a;
+  --str: #7ec898;
+  --num: #74b8d4;
+  --cmt: #665e52;
+  --nm: #d4a8ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Azeret Mono', monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  cursor: default;
+}
+
+/* Custom cursor */
+* { cursor: none !important; }
+#cursor {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s;
+  mix-blend-mode: multiply;
+}
+
+/* Top bar */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 500;
+}
+
+.topbar-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--bg);
+  letter-spacing: 8px;
+}
+
+.topbar-logo span { color: var(--red2); }
+
+.topbar-links {
+  display: flex;
+  gap: 32px;
+}
+
+.topbar-links a {
+  color: var(--ink3);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.topbar-links a:hover { color: var(--bg); }
+
+.topbar-version {
+  font-size: 11px;
+  color: var(--ink3);
+  letter-spacing: 1px;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  margin-top: 48px;
+  min-height: calc(100vh - 48px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  position: sticky;
+  top: 48px;
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 32px 0 48px;
+}
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); }
+
+.nav-group {
+  margin-bottom: 4px;
+}
+
+.nav-label {
+  padding: 16px 20px 6px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  font-weight: 700;
+}
+
+.nav-link {
+  display: block;
+  padding: 5px 20px;
+  color: var(--ink2);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.nav-link:hover {
+  color: var(--red);
+  border-left-color: var(--red);
+  background: rgba(192,57,43,0.05);
+}
+
+.nav-link.kw-link { color: var(--red); opacity: 0.7; font-weight: 500; }
+.nav-link.kw-link:hover { opacity: 1; }
+
+/* Main */
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Hero */
+.hero {
+  padding: 80px 80px 64px;
+  border-bottom: 2px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.hero-bg-text {
+  position: absolute;
+  bottom: -60px;
+  right: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 320px;
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -10px;
+}
+
+.hero-eyebrow {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--red2);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 96px;
+  color: var(--bg);
+  line-height: 0.9;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.hero-title span { color: var(--red2); }
+
+.hero-sub {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink3);
+  margin-bottom: 40px;
+  max-width: 500px;
+}
+
+.hero-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 4px 12px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+
+.tag-red { border-color: var(--red2); color: var(--red2); }
+.tag-dim { border-color: #444; color: #888; }
+
+/* Sections */
+.content { padding: 0; }
+
+.section {
+  padding: 64px 80px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: -8px;
+}
+
+.section h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--ink);
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  line-height: 1;
+}
+
+.section h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin: 40px 0 12px;
+}
+
+.section p {
+  color: var(--ink2);
+  max-width: 640px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* Code */
+pre {
+  background: var(--code-bg);
+  border: none;
+  border-left: 3px solid var(--red);
+  padding: 24px 28px;
+  overflow-x: auto;
+  margin: 20px 0;
+  position: relative;
+}
+
+pre::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 9px;
+  color: #444;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+code {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--code-text);
+}
+
+p code, li code {
+  background: var(--ink);
+  color: var(--red2);
+  padding: 1px 6px;
+  font-size: 12px;
+}
+
+.kw { color: var(--kw); font-weight: 700; }
+.str { color: var(--str); }
+.num { color: var(--num); }
+.cmt { color: var(--cmt); }
+.nm { color: var(--nm); }
+.op { color: #ff9966; }
+
+/* Tables */
+.ref-table {
+  width: 100%;
+  max-width: 700px;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 12px;
+}
+
+.ref-table th {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.ref-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.ref-table tr:nth-child(even) td { background: var(--bg2); }
+
+.ref-table td:first-child {
+  font-family: 'Azeret Mono', monospace;
+  color: var(--red);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Info / warning boxes */
+.box {
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 12px;
+  max-width: 640px;
+  border-left: 3px solid;
+}
+
+.box-info { border-color: var(--gold); background: rgba(184,134,11,0.06); color: var(--ink2); }
+.box-warn { border-color: var(--red); background: rgba(192,57,43,0.06); color: var(--ink2); }
+.box-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.box-info .box-label { color: var(--gold); }
+.box-warn .box-label { color: var(--red); }
+
+/* Run box */
+.run-box {
+  background: var(--code-bg);
+  padding: 16px 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.run-prompt { color: var(--red2); font-size: 13px; }
+.run-cmd { color: var(--code-text); font-size: 13px; }
+
+/* ─── PLAYGROUND ─── */
+.playground {
+  background: var(--ink);
+  padding: 64px 80px;
+  border-bottom: 1px solid #333;
+}
+
+.playground h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--bg);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.playground-sub {
+  color: var(--ink3);
+  font-size: 12px;
+  margin-bottom: 40px;
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+}
+
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px;
+}
+
+.pg-card {
+  background: #111018;
+  border: 1px solid #222;
+  padding: 0;
+  transition: border-color 0.2s;
+  overflow: hidden;
+}
+
+.pg-card:hover { border-color: var(--red); }
+
+.pg-card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pg-card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--bg);
+}
+
+.pg-card-tag {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red2);
+  border: 1px solid var(--red);
+  padding: 2px 8px;
+}
+
+.pg-card pre {
+  margin: 0;
+  border-left: none;
+  border-top: none;
+  padding: 20px 24px;
+  background: transparent;
+  font-size: 12px;
+}
+
+.pg-card pre::after { display: none; }
+
+/* Command reference cards */
+.cmd-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  margin: 24px 0;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.cmd-card {
+  background: var(--bg);
+  padding: 20px 24px;
+}
+
+.cmd-card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin-bottom: 6px;
+}
+
+.cmd-card-desc {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.cmd-card-syntax {
+  background: var(--code-bg);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #aaa;
+  font-family: 'Azeret Mono', monospace;
+}
+
+/* Divider */
+.divider {
+  border: none;
+  border-top: 2px solid var(--ink);
+  margin: 0;
+}
+
+/* Footer */
+footer {
+  background: var(--ink);
+  padding: 32px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer p {
+  font-size: 11px;
+  color: #444;
+  letter-spacing: 1px;
+}
+
+footer span { color: var(--red2); }
+
+/* Scroll animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .hero, .section, .playground { padding: 40px 24px; }
+  footer { padding: 24px; flex-direction: column; gap: 8px; }
+  .topbar { padding: 0 20px; }
+  .topbar-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- Top bar -->
+<header class="topbar">
+  <div class="topbar-logo">CC<span>.</span>LANG</div>
+  <nav class="topbar-links">
+    <a href="#start">Start</a>
+    <a href="#commands">Commands</a>
+    <a href="#modules">Modules</a>
+    <a href="#playground">Playground</a>
+    <a href="#errors">Errors</a>
+  </nav>
+  <div class="topbar-version">v2.0 — beefed up</div>
+</header>
+
+<div class="layout">
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="nav-group">
+    <div class="nav-label">Getting Started</div>
+    <a href="#start" class="nav-link">Overview</a>
+    <a href="#running" class="nav-link">Running CC</a>
+    <a href="#structure" class="nav-link">Syntax Rules</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Core Commands</div>
+    <a href="#speak" class="nav-link kw-link">SPEAK</a>
+    <a href="#grant" class="nav-link kw-link">GRANT</a>
+    <a href="#immortal" class="nav-link kw-link">IMMORTAL</a>
+    <a href="#ask" class="nav-link kw-link">ASK</a>
+    <a href="#silence" class="nav-link kw-link">SILENCE</a>
+    <a href="#betray" class="nav-link kw-link">BETRAY</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Control Flow</div>
+    <a href="#obey" class="nav-link kw-link">OBEY</a>
+    <a href="#while" class="nav-link kw-link">WHILE</a>
+    <a href="#repeat" class="nav-link kw-link">REPEAT</a>
+    <a href="#contract" class="nav-link kw-link">CONTRACT</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Data</div>
+    <a href="#lists" class="nav-link kw-link">GATHER / ADD / GET</a>
+    <a href="#strings" class="nav-link kw-link">LENGTH / JOIN / SLICE</a>
+    <a href="#files" class="nav-link kw-link">READ / WRITE</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Modules</div>
+    <a href="#invoke" class="nav-link kw-link">INVOKE</a>
+    <a href="#mod-random" class="nav-link">RANDOM</a>
+    <a href="#mod-math" class="nav-link">MATH</a>
+    <a href="#mod-time" class="nav-link">TIME</a>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Reference</div>
+    <a href="#operators" class="nav-link">Operators</a>
+    <a href="#types" class="nav-link">Data Types</a>
+    <a href="#errors" class="nav-link">Errors</a>
+    <a href="#playground" class="nav-link">Playground</a>
+  </div>
+</nav>
+
+<!-- Main content -->
+<div class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg-text">CC</div>
+    <div class="hero-eyebrow">// language reference — v2.0</div>
+    <h1 class="hero-title">THE <span>CC</span><br>LANGUAGE</h1>
+    <p class="hero-sub">Cold. Precise. Unforgiving. Code that commands.</p>
+    <div class="hero-tags">
+      <span class="tag tag-red">Files: .cc</span>
+      <span class="tag tag-red">Interpreted</span>
+      <span class="tag tag-dim">Action-First</span>
+      <span class="tag tag-dim">3 Modules</span>
+      <span class="tag tag-dim">Lists + Files + Loops</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <section class="section reveal" id="start">
+      <div class="section-num">01</div>
+      <h2>Overview</h2>
+      <p>CC is an interpreted programming language built around a simple rule: every line begins with a command. No ambiguity. No hesitation. You tell CC what to do, and it obeys.</p>
+      <p>Keywords are always <code>UPPERCASE</code>. Variable names are always <code>lowercase</code>. Strings live inside <code>"double quotes"</code>. Everything else is a number.</p>
+      <pre data-label="first look"><code><span class="cmt">SILENCE welcome to CC</span>
+<span class="kw">IMMORTAL</span> <span class="nm">version</span> <span class="kw">TO</span> <span class="num">2</span>
+<span class="kw">ASK</span> <span class="nm">name</span> <span class="str">"who are you"</span>
+<span class="kw">SPEAK</span> <span class="str">"CC acknowledges you,"</span>
+<span class="kw">SPEAK</span> <span class="nm">name</span></code></pre>
+    </section>
+
+    <!-- RUNNING -->
+    <section class="section reveal" id="running">
+      <div class="section-num">02</div>
+      <h2>Running CC</h2>
+      <p>Save your code in any file ending with <code>.cc</code> and run it from any terminal:</p>
+      <div class="run-box">
+        <span class="run-prompt">$</span>
+        <span class="run-cmd">cc myprogram.cc</span>
+      </div>
+      <p>CC is on your PATH — this works from any folder on your machine. No Python visible. Just CC.</p>
+      <div class="box box-info">
+        <div class="box-label">💡 Tip</div>
+        During development, rebuild your executable after changes with:<br>
+        <code>pyinstaller --onefile --name cc interpreter.py</code>
+      </div>
+    </section>
+
+    <!-- SYNTAX RULES -->
+    <section class="section reveal" id="structure">
+      <div class="section-num">03</div>
+      <h2>Syntax Rules</h2>
+      <p>CC has four hard rules. Break them and she betrays you.</p>
+      <table class="ref-table">
+        <tr><th>Rule</th><th>Detail</th></tr>
+        <tr><td>KEYWORDS UPPERCASE</td><td>All built-in commands must be fully uppercase</td></tr>
+        <tr><td>variables lowercase</td><td>Variable and contract names must be lowercase</td></tr>
+        <tr><td>"Strings quoted"</td><td>All text values must be in double quotes</td></tr>
+        <tr><td>One statement per line</td><td>Each command lives on its own line</td></tr>
+      </table>
+      <div class="box box-warn">
+        <div class="box-label">⚠ Case sensitive</div>
+        <code>speak</code> is not the same as <code>SPEAK</code>. CC will not recognize lowercase keywords.
+      </div>
+    </section>
+
+    <!-- SPEAK -->
+    <section class="section reveal" id="speak">
+      <div class="section-num">04</div>
+      <h2>SPEAK</h2>
+      <p>Prints a value to the screen. Accepts strings, numbers, variables, or math expressions.</p>
+      <pre data-label="syntax"><code><span class="kw">SPEAK</span> <span class="str">"Hello world"</span>
+<span class="kw">SPEAK</span> <span class="nm">x</span>
+<span class="kw">SPEAK</span> <span class="nm">x</span> <span class="op">+</span> <span class="nm">y</span>
+<span class="kw">SPEAK</span> <span class="num">10</span> <span class="op">*</span> <span class="num">3</span> <span class="op">+</span> <span class="num">2</span></code></pre>
+    </section>
+
+    <!-- GRANT -->
+    <section class="section reveal" id="grant">
+      <div class="section-num">05</div>
+      <h2>GRANT</h2>
+      <p>Creates or updates a variable. Requires the keyword <code>TO</code> between the name and value. Can store numbers, strings, or expression results.</p>
+      <pre data-label="syntax"><code><span class="kw">GRANT</span> <span class="nm">x</span> <span class="kw">TO</span> <span class="num">10</span>
+<span class="kw">GRANT</span> <span class="nm">name</span> <span class="kw">TO</span> <span class="str">"CC"</span>
+<span class="kw">GRANT</span> <span class="nm">result</span> <span class="kw">TO</span> <span class="nm">x</span> <span class="op">*</span> <span class="num">2</span> <span class="op">+</span> <span class="num">5</span>
+<span class="kw">GRANT</span> <span class="nm">x</span> <span class="kw">TO</span> <span class="nm">x</span> <span class="op">+</span> <span class="num">1</span></code></pre>
+    </section>
+
+    <!-- IMMORTAL -->
+    <section class="section reveal" id="immortal">
+      <div class="section-num">06</div>
+      <h2>IMMORTAL</h2>
+      <p>Creates a constant. Once set, it can never be changed. Attempting to reassign an IMMORTAL raises an error immediately.</p>
+      <pre data-label="syntax"><code><span class="kw">IMMORTAL</span> <span class="nm">pi</span> <span class="kw">TO</span> <span class="num">3.14159</span>
+<span class="kw">IMMORTAL</span> <span class="nm">max_lives</span> <span class="kw">TO</span> <span class="num">3</span>
+<span class="kw">SPEAK</span> <span class="nm">pi</span></code></pre>
+      <div class="box box-warn">
+        <div class="box-label">⚠ Error</div>
+        <code>GRANT pi TO 5</code> after <code>IMMORTAL pi TO 3.14</code> → <em>CC refuses — 'pi' is IMMORTAL.</em>
+      </div>
+    </section>
+
+    <!-- ASK -->
+    <section class="section reveal" id="ask">
+      <div class="section-num">07</div>
+      <h2>ASK</h2>
+      <p>Prompts the user for input and stores it in a variable. CC automatically detects whether the response is a number or string — no casting required.</p>
+      <pre data-label="syntax"><code><span class="kw">ASK</span> <span class="nm">age</span> <span class="str">"how old are you"</span>
+<span class="kw">ASK</span> <span class="nm">name</span> <span class="str">"what is your name"</span>
+<span class="kw">SPEAK</span> <span class="nm">name</span>
+<span class="kw">SPEAK</span> <span class="nm">age</span> <span class="op">+</span> <span class="num">1</span></code></pre>
+    </section>
+
+    <!-- SILENCE -->
+    <section class="section reveal" id="silence">
+      <div class="section-num">08</div>
+      <h2>SILENCE</h2>
+      <p>Comments. Everything after SILENCE on that line is ignored by CC. Must appear at the start of its own line.</p>
+      <pre data-label="syntax"><code><span class="cmt">SILENCE this is a comment</span>
+<span class="cmt">SILENCE --- setup phase ---</span>
+<span class="kw">GRANT</span> <span class="nm">x</span> <span class="kw">TO</span> <span class="num">10</span></code></pre>
+    </section>
+
+    <!-- BETRAY -->
+    <section class="section reveal" id="betray">
+      <div class="section-num">09</div>
+      <h2>BETRAY</h2>
+      <p>Throws a custom error and halts the program immediately. Use it to guard against impossible states.</p>
+      <pre data-label="syntax"><code><span class="kw">ASK</span> <span class="nm">age</span> <span class="str">"enter your age"</span>
+<span class="kw">OBEY</span> <span class="nm">age</span> <span class="op">&lt;</span> <span class="num">0</span>
+    <span class="kw">BETRAY</span> <span class="str">"age cannot be negative"</span>
+<span class="kw">END</span>
+<span class="kw">SPEAK</span> <span class="nm">age</span></code></pre>
+    </section>
+
+    <!-- OBEY -->
+    <section class="section reveal" id="obey">
+      <div class="section-num">10</div>
+      <h2>OBEY / ALSO OBEY / OTHERWISE</h2>
+      <p>Conditional execution. Supports full else-if chains using <code>ALSO OBEY</code> and a final fallback with <code>OTHERWISE</code>. Every block ends with <code>END</code>.</p>
+      <p>Comparisons: <code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> <code>!=</code></p>
+      <pre data-label="full chain"><code><span class="kw">ASK</span> <span class="nm">score</span> <span class="str">"enter score"</span>
+<span class="kw">OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">90</span>
+    <span class="kw">SPEAK</span> <span class="str">"S rank"</span>
+<span class="kw">ALSO OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">70</span>
+    <span class="kw">SPEAK</span> <span class="str">"A rank"</span>
+<span class="kw">ALSO OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">50</span>
+    <span class="kw">SPEAK</span> <span class="str">"B rank"</span>
+<span class="kw">OTHERWISE</span>
+    <span class="kw">SPEAK</span> <span class="str">"you have failed CC"</span>
+<span class="kw">END</span></code></pre>
+    </section>
+
+    <!-- WHILE -->
+    <section class="section reveal" id="while">
+      <div class="section-num">11</div>
+      <h2>WHILE</h2>
+      <p>Repeats a block as long as a condition remains true. CC will stop after 100,000 iterations to prevent infinite loops.</p>
+      <pre data-label="syntax"><code><span class="kw">GRANT</span> <span class="nm">x</span> <span class="kw">TO</span> <span class="num">1</span>
+<span class="kw">WHILE</span> <span class="nm">x</span> <span class="op">&lt;=</span> <span class="num">5</span>
+    <span class="kw">SPEAK</span> <span class="nm">x</span>
+    <span class="kw">GRANT</span> <span class="nm">x</span> <span class="kw">TO</span> <span class="nm">x</span> <span class="op">+</span> <span class="num">1</span>
+<span class="kw">END</span></code></pre>
+    </section>
+
+    <!-- REPEAT -->
+    <section class="section reveal" id="repeat">
+      <div class="section-num">12</div>
+      <h2>REPEAT</h2>
+      <p>Runs a block an exact number of times. The count can be a literal number or a variable.</p>
+      <pre data-label="syntax"><code><span class="kw">REPEAT</span> <span class="num">3</span>
+    <span class="kw">SPEAK</span> <span class="str">"you have no choice"</span>
+<span class="kw">END</span>
+
+<span class="kw">GRANT</span> <span class="nm">n</span> <span class="kw">TO</span> <span class="num">5</span>
+<span class="kw">REPEAT</span> <span class="nm">n</span>
+    <span class="kw">SPEAK</span> <span class="str">"obedience noted"</span>
+<span class="kw">END</span></code></pre>
+    </section>
+
+    <!-- CONTRACT -->
+    <section class="section reveal" id="contract">
+      <div class="section-num">13</div>
+      <h2>CONTRACT</h2>
+      <p>Defines a named, reusable block of code. Call it by writing its name alone on a line. Contracts share memory with the program — all variables are accessible inside.</p>
+      <pre data-label="syntax"><code><span class="kw">CONTRACT</span> <span class="nm">greet</span>
+    <span class="kw">SPEAK</span> <span class="str">"the contract is sealed"</span>
+    <span class="kw">SPEAK</span> <span class="str">"CC acknowledges you"</span>
+<span class="kw">END</span>
+
+<span class="nm">greet</span>
+<span class="nm">greet</span></code></pre>
+    </section>
+
+    <!-- LISTS -->
+    <section class="section reveal" id="lists">
+      <div class="section-num">14</div>
+      <h2>Lists</h2>
+      <p>CC lists are ordered collections. Create one with <code>GATHER</code>, add items with <code>ADD</code>, retrieve by index with <code>GET</code>, and check the size with <code>SIZE</code>. Indexes start at 0.</p>
+      <pre data-label="syntax"><code><span class="kw">GATHER</span> <span class="nm">scores</span>
+<span class="kw">ADD</span> <span class="nm">scores</span> <span class="num">95</span>
+<span class="kw">ADD</span> <span class="nm">scores</span> <span class="num">82</span>
+<span class="kw">ADD</span> <span class="nm">scores</span> <span class="num">74</span>
+
+<span class="kw">GET</span> <span class="nm">scores</span> <span class="num">0</span> <span class="kw">INTO</span> <span class="nm">first</span>
+<span class="kw">SIZE</span> <span class="nm">scores</span> <span class="kw">INTO</span> <span class="nm">total</span>
+<span class="kw">REMOVE</span> <span class="nm">scores</span> <span class="num">1</span>
+
+<span class="kw">SPEAK</span> <span class="nm">first</span>
+<span class="kw">SPEAK</span> <span class="nm">total</span></code></pre>
+      <table class="ref-table">
+        <tr><th>Command</th><th>Usage</th></tr>
+        <tr><td>GATHER name</td><td>Create an empty list</td></tr>
+        <tr><td>ADD name expr</td><td>Append a value to the list</td></tr>
+        <tr><td>GET name index INTO var</td><td>Read a value by index into a variable</td></tr>
+        <tr><td>REMOVE name index</td><td>Delete item at index</td></tr>
+        <tr><td>SIZE name INTO var</td><td>Store the list length into a variable</td></tr>
+      </table>
+    </section>
+
+    <!-- STRINGS -->
+    <section class="section reveal" id="strings">
+      <div class="section-num">15</div>
+      <h2>String Operations</h2>
+      <p>CC provides three string operations. All results are stored INTO a variable.</p>
+      <pre data-label="syntax"><code><span class="kw">GRANT</span> <span class="nm">first</span> <span class="kw">TO</span> <span class="str">"Lelouch"</span>
+<span class="kw">GRANT</span> <span class="nm">last</span> <span class="kw">TO</span> <span class="str">"Lamperouge"</span>
+
+<span class="kw">LENGTH</span> <span class="nm">first</span> <span class="kw">INTO</span> <span class="nm">n</span>
+<span class="kw">SPEAK</span> <span class="nm">n</span>
+
+<span class="kw">JOIN</span> <span class="nm">first</span> <span class="nm">last</span> <span class="kw">INTO</span> <span class="nm">full</span>
+<span class="kw">SPEAK</span> <span class="nm">full</span>
+
+<span class="kw">SLICE</span> <span class="nm">first</span> <span class="num">0</span> <span class="num">3</span> <span class="kw">INTO</span> <span class="nm">part</span>
+<span class="kw">SPEAK</span> <span class="nm">part</span></code></pre>
+      <pre data-label="output"><code>7
+LelouchLamperouge
+Lel</code></pre>
+    </section>
+
+    <!-- FILES -->
+    <section class="section reveal" id="files">
+      <div class="section-num">16</div>
+      <h2>File I/O</h2>
+      <p>CC can write to and read from files. WRITE creates or overwrites a file. READ loads a file's contents into a variable.</p>
+      <pre data-label="syntax"><code><span class="kw">WRITE</span> <span class="str">"notes.txt"</span> <span class="str">"the contract is sealed"</span>
+
+<span class="kw">READ</span> <span class="str">"notes.txt"</span> <span class="kw">INTO</span> <span class="nm">contents</span>
+<span class="kw">SPEAK</span> <span class="nm">contents</span></code></pre>
+      <div class="box box-warn">
+        <div class="box-label">⚠ Note</div>
+        WRITE overwrites without warning. READ on a missing file causes an error.
+      </div>
+    </section>
+
+    <!-- INVOKE -->
+    <section class="section reveal" id="invoke">
+      <div class="section-num">17</div>
+      <h2>INVOKE — Module System</h2>
+      <p>Modules must be invoked before use. Think of it as CC granting you access to additional powers. Available modules: <code>RANDOM</code>, <code>MATH</code>, <code>TIME</code>.</p>
+      <pre data-label="syntax"><code><span class="kw">INVOKE</span> RANDOM
+<span class="kw">INVOKE</span> MATH
+<span class="kw">INVOKE</span> TIME</code></pre>
+      <div class="box box-warn">
+        <div class="box-label">⚠ Required</div>
+        Using RANDOM, MATH, or TIME without invoking them first will cause an error.
+      </div>
+    </section>
+
+    <section class="section reveal" id="mod-random">
+      <h3>MODULE — RANDOM</h3>
+      <p>Generates a random integer between two values (inclusive) and stores the result.</p>
+      <pre data-label="syntax"><code><span class="kw">INVOKE</span> RANDOM
+<span class="nm">RANDOM</span> <span class="num">1</span> <span class="num">100</span> <span class="kw">INTO</span> <span class="nm">n</span>
+<span class="kw">SPEAK</span> <span class="nm">n</span></code></pre>
+    </section>
+
+    <section class="section reveal" id="mod-math">
+      <h3>MODULE — MATH</h3>
+      <p>Applies a math function to a value and stores the result.</p>
+      <pre data-label="syntax"><code><span class="kw">INVOKE</span> MATH
+<span class="nm">MATH</span> sqrt <span class="num">144</span> <span class="kw">INTO</span> <span class="nm">r</span>
+<span class="nm">MATH</span> floor <span class="num">3.7</span> <span class="kw">INTO</span> <span class="nm">f</span>
+<span class="nm">MATH</span> abs <span class="num">-5</span> <span class="kw">INTO</span> <span class="nm">a</span>
+<span class="kw">SPEAK</span> <span class="nm">r</span></code></pre>
+      <table class="ref-table">
+        <tr><th>Function</th><th>Description</th></tr>
+        <tr><td>sqrt</td><td>Square root</td></tr>
+        <tr><td>floor</td><td>Round down</td></tr>
+        <tr><td>ceil</td><td>Round up</td></tr>
+        <tr><td>abs</td><td>Absolute value</td></tr>
+        <tr><td>round</td><td>Round to nearest</td></tr>
+        <tr><td>sin / cos / tan</td><td>Trig functions (radians)</td></tr>
+        <tr><td>log</td><td>Natural logarithm</td></tr>
+      </table>
+    </section>
+
+    <section class="section reveal" id="mod-time">
+      <h3>MODULE — TIME</h3>
+      <p>Gets the current Unix timestamp (seconds since 1970) and stores it in a variable.</p>
+      <pre data-label="syntax"><code><span class="kw">INVOKE</span> TIME
+<span class="nm">TIME</span> <span class="kw">INTO</span> <span class="nm">t</span>
+<span class="kw">SPEAK</span> <span class="nm">t</span></code></pre>
+    </section>
+
+    <!-- OPERATORS -->
+    <section class="section reveal" id="operators">
+      <div class="section-num">18</div>
+      <h2>Operators</h2>
+      <table class="ref-table">
+        <tr><th>Op</th><th>Type</th><th>Description</th></tr>
+        <tr><td>+</td><td>Math / String</td><td>Add numbers or join strings</td></tr>
+        <tr><td>-</td><td>Math</td><td>Subtract</td></tr>
+        <tr><td>*</td><td>Math</td><td>Multiply</td></tr>
+        <tr><td>/</td><td>Math</td><td>Divide (returns decimal if needed)</td></tr>
+        <tr><td>&gt; / &lt;</td><td>Comparison</td><td>Greater / less than</td></tr>
+        <tr><td>&gt;= / &lt;=</td><td>Comparison</td><td>Greater / less than or equal</td></tr>
+        <tr><td>==</td><td>Comparison</td><td>Equal to</td></tr>
+        <tr><td>!=</td><td>Comparison</td><td>Not equal to</td></tr>
+      </table>
+      <div class="box box-warn">
+        <div class="box-label">⚠ No Precedence</div>
+        Operations evaluate left to right. <code>2 + 3 * 4</code> = 20, not 14. Use intermediate variables when order matters.
+      </div>
+    </section>
+
+    <!-- TYPES -->
+    <section class="section reveal" id="types">
+      <div class="section-num">19</div>
+      <h2>Data Types</h2>
+      <table class="ref-table">
+        <tr><th>Type</th><th>Examples</th><th>Notes</th></tr>
+        <tr><td>Number</td><td>10, 3.14, -5</td><td>Integer or decimal, auto-detected</td></tr>
+        <tr><td>String</td><td>"hello", "CC"</td><td>Must be in double quotes</td></tr>
+        <tr><td>List</td><td>GATHER mylist</td><td>Ordered, 0-indexed, any values</td></tr>
+        <tr><td>Contract</td><td>CONTRACT name</td><td>Stored as a named code block</td></tr>
+      </table>
+    </section>
+
+    <!-- ERRORS -->
+    <section class="section reveal" id="errors">
+      <div class="section-num">20</div>
+      <h2>Errors</h2>
+      <p>When CC encounters a problem she stops immediately. All errors print as <code>[CC] message</code>.</p>
+      <table class="ref-table">
+        <tr><th>Error</th><th>Cause</th></tr>
+        <tr><td>IMMORTAL violation</td><td>Reassigning a constant</td></tr>
+        <tr><td>Unknown variable</td><td>Using a name before GRANT</td></tr>
+        <tr><td>Divide by zero</td><td>Dividing any value by 0</td></tr>
+        <tr><td>Unknown contract</td><td>Calling an undefined CONTRACT</td></tr>
+        <tr><td>Index out of bounds</td><td>GET or REMOVE with invalid index</td></tr>
+        <tr><td>File not found</td><td>READ on a missing file</td></tr>
+        <tr><td>Module not invoked</td><td>Using RANDOM/MATH/TIME without INVOKE</td></tr>
+        <tr><td>Infinite loop</td><td>WHILE exceeding 100,000 iterations</td></tr>
+        <tr><td>BETRAY</td><td>Manually triggered in your code</td></tr>
+      </table>
+    </section>
+
+  </div><!-- /content -->
+
+  <!-- PLAYGROUND -->
+  <div class="playground" id="playground">
+    <div class="section-num" style="color:#333; font-size:48px;">PLAYGROUND</div>
+    <h2>Example Programs</h2>
+    <p class="playground-sub">Real CC programs you can copy, run, and modify.</p>
+
+    <div class="pg-grid">
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">CALCULATOR</div>
+          <div class="pg-card-tag">ASK + MATH</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE four-function calculator</span>
+<span class="kw">ASK</span> <span class="nm">a</span> <span class="str">"first number"</span>
+<span class="kw">ASK</span> <span class="nm">b</span> <span class="str">"second number"</span>
+<span class="kw">SPEAK</span> <span class="nm">a</span> <span class="op">+</span> <span class="nm">b</span>
+<span class="kw">SPEAK</span> <span class="nm">a</span> <span class="op">-</span> <span class="nm">b</span>
+<span class="kw">SPEAK</span> <span class="nm">a</span> <span class="op">*</span> <span class="nm">b</span>
+<span class="kw">SPEAK</span> <span class="nm">a</span> <span class="op">/</span> <span class="nm">b</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">COUNTDOWN</div>
+          <div class="pg-card-tag">WHILE</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE count down to zero</span>
+<span class="kw">ASK</span> <span class="nm">n</span> <span class="str">"start from"</span>
+<span class="kw">WHILE</span> <span class="nm">n</span> <span class="op">&gt;</span> <span class="num">0</span>
+    <span class="kw">SPEAK</span> <span class="nm">n</span>
+    <span class="kw">GRANT</span> <span class="nm">n</span> <span class="kw">TO</span> <span class="nm">n</span> <span class="op">-</span> <span class="num">1</span>
+<span class="kw">END</span>
+<span class="kw">SPEAK</span> <span class="str">"the contract expires"</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">GRADE CHECKER</div>
+          <div class="pg-card-tag">ALSO OBEY</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE rank your score</span>
+<span class="kw">ASK</span> <span class="nm">score</span> <span class="str">"enter score"</span>
+<span class="kw">OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">90</span>
+    <span class="kw">SPEAK</span> <span class="str">"S rank — perfect"</span>
+<span class="kw">ALSO OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">70</span>
+    <span class="kw">SPEAK</span> <span class="str">"A rank — strong"</span>
+<span class="kw">ALSO OBEY</span> <span class="nm">score</span> <span class="op">&gt;=</span> <span class="num">50</span>
+    <span class="kw">SPEAK</span> <span class="str">"B rank — acceptable"</span>
+<span class="kw">OTHERWISE</span>
+    <span class="kw">SPEAK</span> <span class="str">"you have failed CC"</span>
+<span class="kw">END</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">DICE ROLLER</div>
+          <div class="pg-card-tag">INVOKE RANDOM</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE roll a 6-sided die 5 times</span>
+<span class="kw">INVOKE</span> RANDOM
+<span class="kw">GRANT</span> <span class="nm">total</span> <span class="kw">TO</span> <span class="num">0</span>
+<span class="kw">REPEAT</span> <span class="num">5</span>
+    <span class="nm">RANDOM</span> <span class="num">1</span> <span class="num">6</span> <span class="kw">INTO</span> <span class="nm">roll</span>
+    <span class="kw">SPEAK</span> <span class="nm">roll</span>
+    <span class="kw">GRANT</span> <span class="nm">total</span> <span class="kw">TO</span> <span class="nm">total</span> <span class="op">+</span> <span class="nm">roll</span>
+<span class="kw">END</span>
+<span class="kw">SPEAK</span> <span class="str">"total:"</span>
+<span class="kw">SPEAK</span> <span class="nm">total</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">LIST BUILDER</div>
+          <div class="pg-card-tag">GATHER + WHILE</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE build a list from input</span>
+<span class="kw">GATHER</span> <span class="nm">items</span>
+<span class="kw">GRANT</span> <span class="nm">count</span> <span class="kw">TO</span> <span class="num">0</span>
+<span class="kw">WHILE</span> <span class="nm">count</span> <span class="op">&lt;</span> <span class="num">3</span>
+    <span class="kw">ASK</span> <span class="nm">val</span> <span class="str">"add a number"</span>
+    <span class="kw">ADD</span> <span class="nm">items</span> <span class="nm">val</span>
+    <span class="kw">GRANT</span> <span class="nm">count</span> <span class="kw">TO</span> <span class="nm">count</span> <span class="op">+</span> <span class="num">1</span>
+<span class="kw">END</span>
+<span class="kw">GET</span> <span class="nm">items</span> <span class="num">0</span> <span class="kw">INTO</span> <span class="nm">first</span>
+<span class="kw">SPEAK</span> <span class="nm">first</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">SQRT TABLE</div>
+          <div class="pg-card-tag">INVOKE MATH</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE print sqrt of 1 to 5</span>
+<span class="kw">INVOKE</span> MATH
+<span class="kw">GRANT</span> <span class="nm">i</span> <span class="kw">TO</span> <span class="num">1</span>
+<span class="kw">WHILE</span> <span class="nm">i</span> <span class="op">&lt;=</span> <span class="num">5</span>
+    <span class="nm">MATH</span> sqrt <span class="nm">i</span> <span class="kw">INTO</span> <span class="nm">r</span>
+    <span class="kw">SPEAK</span> <span class="nm">r</span>
+    <span class="kw">GRANT</span> <span class="nm">i</span> <span class="kw">TO</span> <span class="nm">i</span> <span class="op">+</span> <span class="num">1</span>
+<span class="kw">END</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">NOTE SAVER</div>
+          <div class="pg-card-tag">READ + WRITE</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE save and load a note</span>
+<span class="kw">ASK</span> <span class="nm">note</span> <span class="str">"write your note"</span>
+<span class="kw">WRITE</span> <span class="str">"note.txt"</span> <span class="nm">note</span>
+<span class="kw">SPEAK</span> <span class="str">"saved."</span>
+<span class="kw">READ</span> <span class="str">"note.txt"</span> <span class="kw">INTO</span> <span class="nm">loaded</span>
+<span class="kw">SPEAK</span> <span class="str">"loaded:"</span>
+<span class="kw">SPEAK</span> <span class="nm">loaded</span></code></pre>
+      </div>
+
+      <div class="pg-card">
+        <div class="pg-card-header">
+          <div class="pg-card-title">GUESSING GAME</div>
+          <div class="pg-card-tag">RANDOM + WHILE</div>
+        </div>
+        <pre><code><span class="cmt">SILENCE guess the number</span>
+<span class="kw">INVOKE</span> RANDOM
+<span class="nm">RANDOM</span> <span class="num">1</span> <span class="num">10</span> <span class="kw">INTO</span> <span class="nm">secret</span>
+<span class="kw">GRANT</span> <span class="nm">guess</span> <span class="kw">TO</span> <span class="num">0</span>
+<span class="kw">WHILE</span> <span class="nm">guess</span> <span class="op">!=</span> <span class="nm">secret</span>
+    <span class="kw">ASK</span> <span class="nm">guess</span> <span class="str">"guess 1-10"</span>
+    <span class="kw">OBEY</span> <span class="nm">guess</span> <span class="op">&lt;</span> <span class="nm">secret</span>
+        <span class="kw">SPEAK</span> <span class="str">"too low"</span>
+    <span class="kw">ALSO OBEY</span> <span class="nm">guess</span> <span class="op">&gt;</span> <span class="nm">secret</span>
+        <span class="kw">SPEAK</span> <span class="str">"too high"</span>
+    <span class="kw">END</span>
+<span class="kw">END</span>
+<span class="kw">SPEAK</span> <span class="str">"correct"</span></code></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>CC Language — <span>v2.0</span></p>
+    <p>built from scratch. runs on <span>.cc</span> files.</p>
+    <p>stage 2 complete. <span>stage 3 incoming.</span></p>
+  </footer>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 5 + 'px';
+  cursor.style.top = e.clientY - 5 + 'px';
+});
+document.addEventListener('mousedown', () => cursor.style.transform = 'scale(2.5)');
+document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+
+// Reveal on scroll
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+</script>
+
+</body>
+</html>
